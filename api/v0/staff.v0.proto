@@ -1,0 +1,183 @@
+syntax = "proto3";
+
+package api.v0;
+
+option go_package = "pkg/staff/v0;api";
+
+// Комбинированный сервис для управления персоналом и авторизацией
+service StaffService {
+  // === Методы управления персоналом ===
+  
+  // Получение информации о сотруднике по ID
+  rpc GetStaff(GetStaffRequest) returns (GetStaffResponse) {}
+  
+  // Создание нового сотрудника
+  rpc CreateStaff(CreateStaffRequest) returns (CreateStaffResponse) {}
+  
+  // Обновление информации о сотруднике
+  rpc UpdateStaff(UpdateStaffRequest) returns (UpdateStaffResponse) {}
+  
+  // Удаление сотрудника
+  rpc DeleteStaff(DeleteStaffRequest) returns (DeleteStaffResponse) {}
+  
+  // Получение списка сотрудников с фильтрацией и пагинацией
+  rpc ListStaff(ListStaffRequest) returns (ListStaffResponse) {}
+  
+  // === Методы авторизации ===
+  
+  // Авторизация сотрудника по логину и паролю
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  
+  // Обновление токена сессии
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  
+  // Выход из системы и завершение сессии
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+  
+  // Проверка текущего статуса авторизации
+  rpc CheckAuth(CheckAuthRequest) returns (CheckAuthResponse) {}
+  
+  // Изменение пароля авторизованного пользователя
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {}
+}
+
+// === Сообщения для управления персоналом ===
+
+// Запрос на получение информации о сотруднике
+message GetStaffRequest {
+  string id = 1;
+}
+
+// Ответ с информацией о сотруднике
+message GetStaffResponse {
+  Staff staff = 1;
+}
+
+// Запрос на создание сотрудника
+message CreateStaffRequest {
+  string login = 1;
+  string password = 2;
+  int32 role_id = 3;
+  Permissions permissions = 4;
+}
+
+// Ответ с информацией о созданном сотруднике
+message CreateStaffResponse {
+  Staff staff = 1;
+}
+
+// Запрос на обновление информации о сотруднике
+message UpdateStaffRequest {
+  string id = 1;
+  optional string login = 2;
+  optional int32 role_id = 3;
+  optional Permissions permissions = 4;
+}
+
+// Ответ с обновленной информацией о сотруднике
+message UpdateStaffResponse {
+  Staff staff = 1;
+}
+
+// Запрос на удаление сотрудника
+message DeleteStaffRequest {
+  string id = 1;
+}
+
+// Ответ на удаление сотрудника
+message DeleteStaffResponse {
+  bool success = 1;
+}
+
+// Запрос на получение списка сотрудников
+message ListStaffRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  optional string search_term = 3; // поиск по логину
+  optional int32 role_id = 4; // фильтр по роли
+}
+
+// Ответ со списком сотрудников
+message ListStaffResponse {
+  repeated Staff staff = 1;
+  int32 total_count = 2;
+  int32 page_count = 3;
+}
+
+// Структура данных сотрудника
+message Staff {
+  string id = 1;
+  string login = 2;
+  int32 role_id = 3;
+  string role_name = 4;
+  Permissions permissions = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
+}
+
+// === Сообщения для авторизации ===
+
+// Запрос на авторизацию
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+// Ответ на успешную авторизацию
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_at = 3; // время истечения токена в unix timestamp
+  Staff staff = 4;
+}
+
+// Запрос на обновление токена
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+// Ответ с обновленным токеном
+message RefreshTokenResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_at = 3; // время истечения токена в unix timestamp
+}
+
+// Запрос на выход из системы
+message LogoutRequest {
+  string access_token = 1;
+}
+
+// Ответ на выход из системы
+message LogoutResponse {
+  bool success = 1;
+}
+
+// Запрос на проверку авторизации
+message CheckAuthRequest {
+  string access_token = 1;
+}
+
+// Ответ на проверку авторизации
+message CheckAuthResponse {
+  bool authorized = 1;
+  Staff staff = 2;
+}
+
+// Запрос на смену пароля
+message ChangePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+  // access_token используется для идентификации пользователя
+  string access_token = 3;
+}
+
+// Ответ на смену пароля
+message ChangePasswordResponse {
+  bool success = 1;
+}
+
+// Структура разрешений сотрудника
+message Permissions {
+  repeated string access = 1;
+}
