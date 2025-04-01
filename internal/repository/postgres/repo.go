@@ -44,7 +44,7 @@ func New(cfg *config.Config) *Repo {
 func (r *Repo) StaffGetByID(ctx context.Context, id uuid.UUID) (*model.Staff, error) {
 	query, args, err := sq.
 		Select("s.id", "s.login", "s.password_hash", "s.role_id", "r.name as role_name",
-			"s.created_at", "s.updated_at").
+			"s.permissions", "s.created_at", "s.updated_at").
 		From("staff s").
 		LeftJoin("roles r ON s.role_id = r.id").
 		Where(sq.Eq{"s.id": id}).
@@ -71,7 +71,7 @@ func (r *Repo) StaffGetByID(ctx context.Context, id uuid.UUID) (*model.Staff, er
 func (r *Repo) StaffGetByLogin(ctx context.Context, login string) (*model.Staff, error) {
 	query, args, err := sq.
 		Select("s.id", "s.login", "s.password_hash", "s.role_id", "r.name as role_name",
-			"s.created_at", "s.updated_at").
+			"s.permissions", "s.created_at", "s.updated_at").
 		From("staff s").
 		LeftJoin("roles r ON s.role_id = r.id").
 		Where(sq.Eq{"s.login": login}).
@@ -183,7 +183,7 @@ func (r *Repo) StaffList(ctx context.Context, filter *model.StaffFilter) ([]*mod
 	// Построение базового запроса
 	baseQuery := sq.
 		Select("s.id", "s.login", "s.password_hash", "s.role_id", "r.name as role_name",
-			"s.created_at", "s.updated_at").
+			"s.permissions", "s.created_at", "s.updated_at").
 		From("staff s").
 		LeftJoin("roles r ON s.role_id = r.id").
 		PlaceholderFormat(sq.Dollar)

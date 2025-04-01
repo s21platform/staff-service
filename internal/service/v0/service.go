@@ -125,11 +125,17 @@ func (s *StaffService) CreateStaff(ctx context.Context, req *staffv0.CreateStaff
 		return nil, status.Error(codes.Internal, "failed to hash password")
 	}
 
+	permissions := model.Permissions{}
+	if req.Permissions != nil {
+		permissions.Access = req.Permissions.Access
+	}
+
 	staff := &model.Staff{
 		ID:           uuid.New(),
 		Login:        req.Login,
 		PasswordHash: string(hashedPassword),
 		RoleID:       int(req.RoleId),
+		Permissions:  permissions,
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 	}
@@ -164,6 +170,9 @@ func (s *StaffService) UpdateStaff(ctx context.Context, req *staffv0.UpdateStaff
 	}
 	if req.RoleId != nil {
 		staff.RoleID = int(*req.RoleId)
+	}
+	if req.Permissions != nil {
+		staff.Permissions.Access = req.Permissions.Access
 	}
 	staff.UpdatedAt = time.Now()
 
@@ -441,10 +450,13 @@ func (s *StaffService) createSession(ctx context.Context, staffID uuid.UUID) (*m
 // convertStaffToProto преобразует модель Staff в proto-сообщение
 func convertStaffToProto(staff *model.Staff) *staffv0.Staff {
 	return &staffv0.Staff{
-		Id:        staff.ID.String(),
-		Login:     staff.Login,
-		RoleId:    int32(staff.RoleID),
-		RoleName:  staff.RoleName,
+		Id:       staff.ID.String(),
+		Login:    staff.Login,
+		RoleId:   int32(staff.RoleID),
+		RoleName: staff.RoleName,
+		Permissions: &staffv0.Permissions{
+			Access: staff.Permissions.Access,
+		},
 		CreatedAt: staff.CreatedAt.Unix(),
 		UpdatedAt: staff.UpdatedAt.Unix(),
 	}
