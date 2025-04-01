@@ -7,11 +7,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/s21platform/staff-service/internal/model"
-	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/s21platform/staff-service/internal/model"
+	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
 )
 
 var (
