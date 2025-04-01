@@ -3,14 +3,16 @@ package v0
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/s21platform/staff-service/internal/model"
-	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/s21platform/staff-service/internal/model"
+	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
 )
 
 var (
@@ -133,6 +135,7 @@ func (s *StaffService) CreateStaff(ctx context.Context, req *staffv0.CreateStaff
 	}
 
 	if err := s.repo.StaffCreate(ctx, staff); err != nil {
+		log.Printf("error: %v", err)
 		return nil, status.Error(codes.Internal, "failed to create staff")
 	}
 
@@ -232,18 +235,22 @@ func (s *StaffService) Login(ctx context.Context, req *staffv0.LoginRequest) (*s
 
 	staff, err := s.repo.StaffGetByLogin(ctx, req.Login)
 	if err != nil {
+		log.Printf("error: %v", err)
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
 	if staff == nil {
+		log.Printf("staff not found")
 		return nil, status.Error(codes.NotFound, "staff not found")
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(staff.PasswordHash), []byte(req.Password)); err != nil {
+		log.Printf("invalid password")
 		return nil, status.Error(codes.Unauthenticated, "invalid password")
 	}
 
 	session, err := s.createSession(ctx, staff.ID)
 	if err != nil {
+		log.Printf("failed to create session: %v", err)
 		return nil, err
 	}
 

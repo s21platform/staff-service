@@ -39,7 +39,3 @@ temp/
 
 # Log files
 *.log
-
-# Generated files
-*.pb.go
-*.pb.gw.go 

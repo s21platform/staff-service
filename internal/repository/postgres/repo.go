@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/lib/pq"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"github.com/s21platform/staff-service/internal/config"
 	"github.com/s21platform/staff-service/internal/model"
 )
@@ -107,6 +107,7 @@ func (r *Repo) StaffCreate(ctx context.Context, staff *model.Staff) error {
 		return fmt.Errorf("failed to build query: %w", err)
 	}
 
+	log.Printf("query: %s, args: %v", query, args)
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("failed to create staff: %w", err)
@@ -256,6 +257,7 @@ func (r *Repo) SessionCreate(ctx context.Context, session *model.Session) error 
 
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
+		log.Printf("failed to create session (in repo): %v", err)
 		return fmt.Errorf("failed to create session: %w", err)
 	}
 
@@ -434,4 +436,25 @@ func (r *Repo) RoleList(ctx context.Context) ([]*model.Role, error) {
 	}
 
 	return roles, nil
+}
+
+// GetStaffRoleByToken получает роль сотрудника по токену сессии
+func (r *Repo) GetStaffRoleByToken(ctx context.Context, token string) (int, error) {
+	query := `
+		SELECT s.role_id
+		FROM staff s
+		JOIN sessions sess ON sess.staff_id = s.id
+		WHERE sess.token = $1 AND sess.expires_at > NOW()
+	`
+
+	var roleID int
+	err := r.db.GetContext(ctx, &roleID, query, token)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, ErrNotFound
+		}
+		return 0, fmt.Errorf("failed to get staff role: %w", err)
+	}
+
+	return roleID, nil
 }
