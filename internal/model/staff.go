@@ -8,14 +8,14 @@ import (
 
 // Staff представляет информацию о сотруднике
 type Staff struct {
-	ID           uuid.UUID
-	Login        string
-	PasswordHash string
-	RoleID       int
-	RoleName     string
-	Permissions  Permissions
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID           uuid.UUID `db:"id"`
+	Login        string    `db:"login"`
+	PasswordHash string    `db:"password_hash"`
+	RoleID       int       `db:"role_id"`
+	RoleName     string    `db:"role_name"`
+	Permissions  Permissions `db:"permissions"`
+	CreatedAt    time.Time `db:"created_at"`
+	UpdatedAt    time.Time `db:"updated_at"`
 }
 
 // Permissions представляет разрешения сотрудника

@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"github.com/s21platform/staff-service/internal/config"
+	"github.com/s21platform/staff-service/internal/middleware"
 	"github.com/s21platform/staff-service/internal/repository/postgres"
 	v0 "github.com/s21platform/staff-service/internal/service/v0"
 	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
@@ -23,9 +24,17 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	// Создаем интерсептор для проверки ролей
+	authInterceptor := middleware.NewAuthInterceptor(dbRepo)
+
+	// Создаем gRPC сервер с интерсептором
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(authInterceptor.Unary()),
+	)
+
 	staffv0.RegisterStaffServiceServer(grpcServer, service)
 
+	log.Printf("Starting staff service on port %s", cfg.Service.Port)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

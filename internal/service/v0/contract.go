@@ -25,6 +25,7 @@ type DbRepo interface {
 	SessionDelete(ctx context.Context, token string) error
 	SessionDeleteAllForStaff(ctx context.Context, staffID uuid.UUID) error
 	SessionUpdateTokens(ctx context.Context, session *model.Session) error
+	GetStaffRoleByToken(ctx context.Context, token string) (int, error)
 
 	// Методы для работы с Role
 	RoleGetByID(ctx context.Context, id int) (*model.Role, error)
