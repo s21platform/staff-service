@@ -203,9 +203,20 @@ func (s *StaffService) DeleteStaff(ctx context.Context, req *staffv0.DeleteStaff
 
 // ListStaff получает список сотрудников с фильтрацией и пагинацией
 func (s *StaffService) ListStaff(ctx context.Context, req *staffv0.ListStaffRequest) (*staffv0.ListStaffResponse, error) {
+	// Установка значений по умолчанию для пагинации
+	page := int(req.Page)
+	if page < 1 {
+		page = 1
+	}
+
+	pageSize := int(req.PageSize)
+	if pageSize < 1 {
+		pageSize = 10 // значение по умолчанию
+	}
+
 	filter := &model.StaffFilter{
-		Page:     int(req.Page),
-		PageSize: int(req.PageSize),
+		Page:     page,
+		PageSize: pageSize,
 	}
 	if req.SearchTerm != nil {
 		filter.SearchTerm = *req.SearchTerm
@@ -224,9 +235,10 @@ func (s *StaffService) ListStaff(ctx context.Context, req *staffv0.ListStaffRequ
 		protoStaffList[i] = convertStaffToProto(staff)
 	}
 
-	pageCount := total / filter.PageSize
-	if total%filter.PageSize > 0 {
-		pageCount++
+	// Безопасное вычисление количества страниц
+	pageCount := 0
+	if pageSize > 0 {
+		pageCount = (total + pageSize - 1) / pageSize
 	}
 
 	return &staffv0.ListStaffResponse{
