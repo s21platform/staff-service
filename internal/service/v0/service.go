@@ -117,11 +117,13 @@ func (s *StaffService) GetStaff(ctx context.Context, req *staffv0.GetStaffReques
 // CreateStaff создает нового сотрудника
 func (s *StaffService) CreateStaff(ctx context.Context, req *staffv0.CreateStaffRequest) (*staffv0.CreateStaffResponse, error) {
 	if req.Login == "" || req.Password == "" || req.RoleId == 0 {
+		log.Printf("invalid input: %v", req)
 		return nil, status.Error(codes.InvalidArgument, "login, password and role_id are required")
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), s.bcryptCost)
 	if err != nil {
+		log.Printf("failed to hash password: %v", err)
 		return nil, status.Error(codes.Internal, "failed to hash password")
 	}
 

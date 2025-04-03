@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -60,10 +61,11 @@ func (i *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		}
 
 		token := values[0]
-
+		log.Printf("token: %s", token)
 		// Получаем роль пользователя
 		roleID, err := i.sessionManager.GetStaffRoleByToken(ctx, token)
 		if err != nil {
+			log.Printf("failed to get staff role by token: %v", err)
 			return nil, status.Error(codes.Unauthenticated, "invalid token")
 		}
 
