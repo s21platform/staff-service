@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -19,11 +20,11 @@ const (
 
 // RolePermissions определяет разрешения для каждого метода gRPC
 var RolePermissions = map[string][]int{
-	"/api.v0.StaffService/CreateStaff": {RoleOwner},
-	"/api.v0.StaffService/UpdateStaff": {RoleOwner, RoleAdmin},
-	"/api.v0.StaffService/DeleteStaff": {RoleOwner},
-	"/api.v0.StaffService/ListStaff":   {RoleOwner, RoleAdmin, RoleStaff, RoleViewer},
-	"/api.v0.StaffService/GetStaff":    {RoleOwner, RoleAdmin, RoleStaff, RoleViewer},
+	"/staff.StaffService/Create": {RoleOwner},
+	"/staff.StaffService/Update": {RoleOwner, RoleAdmin},
+	"/staff.StaffService/Delete": {RoleOwner},
+	"/staff.StaffService/List":   {RoleOwner, RoleAdmin, RoleStaff, RoleViewer},
+	"/staff.StaffService/Get":    {RoleOwner, RoleAdmin, RoleStaff, RoleViewer},
 }
 
 type AuthInterceptor struct {
@@ -43,8 +44,8 @@ func NewAuthInterceptor(sessionManager SessionManager) *AuthInterceptor {
 func (i *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		// Пропускаем методы авторизации
-		if info.FullMethod == "/api.v0.StaffService/Login" ||
-			info.FullMethod == "/api.v0.StaffService/RefreshToken" {
+		if info.FullMethod == "/staff.StaffService/Login" ||
+			info.FullMethod == "/staff.StaffService/RefreshToken" {
 			return handler(ctx, req)
 		}
 
@@ -60,10 +61,11 @@ func (i *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		}
 
 		token := values[0]
-
+		log.Printf("token: %s", token)
 		// Получаем роль пользователя
 		roleID, err := i.sessionManager.GetStaffRoleByToken(ctx, token)
 		if err != nil {
+			log.Printf("failed to get staff role by token: %v", err)
 			return nil, status.Error(codes.Unauthenticated, "invalid token")
 		}
 

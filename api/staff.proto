@@ -1,60 +1,60 @@
 syntax = "proto3";
 
-package api.v0;
+package staff;
 
-option go_package = "pkg/staff/v0;api";
+option go_package = "pkg/staff;staff";
 
 // Комбинированный сервис для управления персоналом и авторизацией
 service StaffService {
   // === Методы управления персоналом ===
   
   // Получение информации о сотруднике по ID
-  rpc GetStaff(GetStaffRequest) returns (GetStaffResponse) {}
+  rpc Get(GetIn) returns (GetOut) {}
   
   // Создание нового сотрудника
-  rpc CreateStaff(CreateStaffRequest) returns (CreateStaffResponse) {}
+  rpc Create(CreateIn) returns (CreateOut) {}
   
   // Обновление информации о сотруднике
-  rpc UpdateStaff(UpdateStaffRequest) returns (UpdateStaffResponse) {}
+  rpc Update(UpdateIn) returns (UpdateOut) {}
   
   // Удаление сотрудника
-  rpc DeleteStaff(DeleteStaffRequest) returns (DeleteStaffResponse) {}
+  rpc Delete(DeleteIn) returns (DeleteOut) {}
   
   // Получение списка сотрудников с фильтрацией и пагинацией
-  rpc ListStaff(ListStaffRequest) returns (ListStaffResponse) {}
+  rpc List(ListIn) returns (ListOut) {}
   
   // === Методы авторизации ===
   
   // Авторизация сотрудника по логину и паролю
-  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc Login(LoginIn) returns (LoginOut) {}
   
   // Обновление токена сессии
-  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  rpc RefreshToken(RefreshTokenIn) returns (RefreshTokenOut) {}
   
   // Выход из системы и завершение сессии
-  rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+  rpc Logout(LogoutIn) returns (LogoutOut) {}
   
   // Проверка текущего статуса авторизации
-  rpc CheckAuth(CheckAuthRequest) returns (CheckAuthResponse) {}
+  rpc CheckAuth(CheckAuthIn) returns (CheckAuthOut) {}
   
   // Изменение пароля авторизованного пользователя
-  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {}
+  rpc ChangePassword(ChangePasswordIn) returns (ChangePasswordOut) {}
 }
 
 // === Сообщения для управления персоналом ===
 
 // Запрос на получение информации о сотруднике
-message GetStaffRequest {
+message GetIn {
   string id = 1;
 }
 
 // Ответ с информацией о сотруднике
-message GetStaffResponse {
+message GetOut {
   Staff staff = 1;
 }
 
 // Запрос на создание сотрудника
-message CreateStaffRequest {
+message CreateIn {
   string login = 1;
   string password = 2;
   int32 role_id = 3;
@@ -62,12 +62,12 @@ message CreateStaffRequest {
 }
 
 // Ответ с информацией о созданном сотруднике
-message CreateStaffResponse {
+message CreateOut {
   Staff staff = 1;
 }
 
 // Запрос на обновление информации о сотруднике
-message UpdateStaffRequest {
+message UpdateIn {
   string id = 1;
   optional string login = 2;
   optional int32 role_id = 3;
@@ -75,22 +75,22 @@ message UpdateStaffRequest {
 }
 
 // Ответ с обновленной информацией о сотруднике
-message UpdateStaffResponse {
+message UpdateOut {
   Staff staff = 1;
 }
 
 // Запрос на удаление сотрудника
-message DeleteStaffRequest {
+message DeleteIn {
   string id = 1;
 }
 
 // Ответ на удаление сотрудника
-message DeleteStaffResponse {
+message DeleteOut {
   bool success = 1;
 }
 
 // Запрос на получение списка сотрудников
-message ListStaffRequest {
+message ListIn {
   int32 page = 1;
   int32 page_size = 2;
   optional string search_term = 3; // поиск по логину
@@ -98,7 +98,7 @@ message ListStaffRequest {
 }
 
 // Ответ со списком сотрудников
-message ListStaffResponse {
+message ListOut {
   repeated Staff staff = 1;
   int32 total_count = 2;
   int32 page_count = 3;
@@ -118,13 +118,13 @@ message Staff {
 // === Сообщения для авторизации ===
 
 // Запрос на авторизацию
-message LoginRequest {
+message LoginIn {
   string login = 1;
   string password = 2;
 }
 
 // Ответ на успешную авторизацию
-message LoginResponse {
+message LoginOut {
   string access_token = 1;
   string refresh_token = 2;
   int64 expires_at = 3; // время истечения токена в unix timestamp
@@ -132,40 +132,40 @@ message LoginResponse {
 }
 
 // Запрос на обновление токена
-message RefreshTokenRequest {
+message RefreshTokenIn {
   string refresh_token = 1;
 }
 
 // Ответ с обновленным токеном
-message RefreshTokenResponse {
+message RefreshTokenOut {
   string access_token = 1;
   string refresh_token = 2;
   int64 expires_at = 3; // время истечения токена в unix timestamp
 }
 
 // Запрос на выход из системы
-message LogoutRequest {
+message LogoutIn {
   string access_token = 1;
 }
 
 // Ответ на выход из системы
-message LogoutResponse {
+message LogoutOut {
   bool success = 1;
 }
 
 // Запрос на проверку авторизации
-message CheckAuthRequest {
+message CheckAuthIn {
   string access_token = 1;
 }
 
 // Ответ на проверку авторизации
-message CheckAuthResponse {
+message CheckAuthOut {
   bool authorized = 1;
   Staff staff = 2;
 }
 
 // Запрос на смену пароля
-message ChangePasswordRequest {
+message ChangePasswordIn {
   string old_password = 1;
   string new_password = 2;
   // access_token используется для идентификации пользователя
@@ -173,7 +173,7 @@ message ChangePasswordRequest {
 }
 
 // Ответ на смену пароля
-message ChangePasswordResponse {
+message ChangePasswordOut {
   bool success = 1;
 }
 
