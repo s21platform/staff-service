@@ -1,4 +1,4 @@
-package v0
+package service
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/s21platform/staff-service/internal/model"
-	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
+	staff "github.com/s21platform/staff-service/pkg/staff"
 )
 
 var (
@@ -40,7 +40,7 @@ const (
 
 // StaffService реализует gRPC API для управления персоналом
 type StaffService struct {
-	staffv0.UnimplementedStaffServiceServer
+	staff.UnimplementedStaffServiceServer
 	repo DbRepo
 
 	// Настройки сервиса
@@ -95,27 +95,27 @@ func WithBcryptCost(cost int) ServiceOption {
 // ===== Реализация методов управления персоналом =====
 
 // GetStaff получает информацию о сотруднике по ID
-func (s *StaffService) GetStaff(ctx context.Context, req *staffv0.GetStaffRequest) (*staffv0.GetStaffResponse, error) {
+func (s *StaffService) Get(ctx context.Context, req *staff.GetIn) (*staff.GetOut, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid staff id")
 	}
 
-	staff, err := s.repo.StaffGetByID(ctx, id)
+	staffModel, err := s.repo.StaffGetByID(ctx, id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
-	if staff == nil {
+	if staffModel == nil {
 		return nil, status.Error(codes.NotFound, "staff not found")
 	}
 
-	return &staffv0.GetStaffResponse{
-		Staff: convertStaffToProto(staff),
+	return &staff.GetOut{
+		Staff: convertStaffToProto(staffModel),
 	}, nil
 }
 
 // CreateStaff создает нового сотрудника
-func (s *StaffService) CreateStaff(ctx context.Context, req *staffv0.CreateStaffRequest) (*staffv0.CreateStaffResponse, error) {
+func (s *StaffService) Create(ctx context.Context, req *staff.CreateIn) (*staff.CreateOut, error) {
 	if req.Login == "" || req.Password == "" || req.RoleId == 0 {
 		log.Printf("invalid input: %v", req)
 		return nil, status.Error(codes.InvalidArgument, "login, password and role_id are required")
@@ -132,7 +132,7 @@ func (s *StaffService) CreateStaff(ctx context.Context, req *staffv0.CreateStaff
 		permissions.Access = req.Permissions.Access
 	}
 
-	staff := &model.Staff{
+	staffModel := &model.Staff{
 		ID:           uuid.New(),
 		Login:        req.Login,
 		PasswordHash: string(hashedPassword),
@@ -142,53 +142,53 @@ func (s *StaffService) CreateStaff(ctx context.Context, req *staffv0.CreateStaff
 		UpdatedAt:    time.Now(),
 	}
 
-	if err := s.repo.StaffCreate(ctx, staff); err != nil {
+	if err := s.repo.StaffCreate(ctx, staffModel); err != nil {
 		log.Printf("error: %v", err)
 		return nil, status.Error(codes.Internal, "failed to create staff")
 	}
 
-	return &staffv0.CreateStaffResponse{
-		Staff: convertStaffToProto(staff),
+	return &staff.CreateOut{
+		Staff: convertStaffToProto(staffModel),
 	}, nil
 }
 
 // UpdateStaff обновляет информацию о сотруднике
-func (s *StaffService) UpdateStaff(ctx context.Context, req *staffv0.UpdateStaffRequest) (*staffv0.UpdateStaffResponse, error) {
+func (s *StaffService) Update(ctx context.Context, req *staff.UpdateIn) (*staff.UpdateOut, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid staff id")
 	}
 
-	staff, err := s.repo.StaffGetByID(ctx, id)
+	staffModel, err := s.repo.StaffGetByID(ctx, id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
-	if staff == nil {
+	if staffModel == nil {
 		return nil, status.Error(codes.NotFound, "staff not found")
 	}
 
 	if req.Login != nil {
-		staff.Login = *req.Login
+		staffModel.Login = *req.Login
 	}
 	if req.RoleId != nil {
-		staff.RoleID = int(*req.RoleId)
+		staffModel.RoleID = int(*req.RoleId)
 	}
 	if req.Permissions != nil {
-		staff.Permissions.Access = req.Permissions.Access
+		staffModel.Permissions.Access = req.Permissions.Access
 	}
-	staff.UpdatedAt = time.Now()
+	staffModel.UpdatedAt = time.Now()
 
-	if err := s.repo.StaffUpdate(ctx, staff); err != nil {
+	if err := s.repo.StaffUpdate(ctx, staffModel); err != nil {
 		return nil, status.Error(codes.Internal, "failed to update staff")
 	}
 
-	return &staffv0.UpdateStaffResponse{
-		Staff: convertStaffToProto(staff),
+	return &staff.UpdateOut{
+		Staff: convertStaffToProto(staffModel),
 	}, nil
 }
 
 // DeleteStaff удаляет сотрудника
-func (s *StaffService) DeleteStaff(ctx context.Context, req *staffv0.DeleteStaffRequest) (*staffv0.DeleteStaffResponse, error) {
+func (s *StaffService) Delete(ctx context.Context, req *staff.DeleteIn) (*staff.DeleteOut, error) {
 	id, err := uuid.Parse(req.Id)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid staff id")
@@ -198,11 +198,11 @@ func (s *StaffService) DeleteStaff(ctx context.Context, req *staffv0.DeleteStaff
 		return nil, status.Error(codes.Internal, "failed to delete staff")
 	}
 
-	return &staffv0.DeleteStaffResponse{}, nil
+	return &staff.DeleteOut{}, nil
 }
 
 // ListStaff получает список сотрудников с фильтрацией и пагинацией
-func (s *StaffService) ListStaff(ctx context.Context, req *staffv0.ListStaffRequest) (*staffv0.ListStaffResponse, error) {
+func (s *StaffService) List(ctx context.Context, req *staff.ListIn) (*staff.ListOut, error) {
 	// Установка значений по умолчанию для пагинации
 	page := int(req.Page)
 	if page < 1 {
@@ -230,7 +230,7 @@ func (s *StaffService) ListStaff(ctx context.Context, req *staffv0.ListStaffRequ
 		return nil, status.Error(codes.Internal, "failed to list staff")
 	}
 
-	protoStaffList := make([]*staffv0.Staff, len(staffList))
+	protoStaffList := make([]*staff.Staff, len(staffList))
 	for i, staff := range staffList {
 		protoStaffList[i] = convertStaffToProto(staff)
 	}
@@ -241,7 +241,7 @@ func (s *StaffService) ListStaff(ctx context.Context, req *staffv0.ListStaffRequ
 		pageCount = (total + pageSize - 1) / pageSize
 	}
 
-	return &staffv0.ListStaffResponse{
+	return &staff.ListOut{
 		Staff:      protoStaffList,
 		TotalCount: int32(total),
 		PageCount:  int32(pageCount),
@@ -251,42 +251,42 @@ func (s *StaffService) ListStaff(ctx context.Context, req *staffv0.ListStaffRequ
 // ===== Реализация методов авторизации =====
 
 // Login авторизация сотрудника по логину и паролю
-func (s *StaffService) Login(ctx context.Context, req *staffv0.LoginRequest) (*staffv0.LoginResponse, error) {
+func (s *StaffService) Login(ctx context.Context, req *staff.LoginIn) (*staff.LoginOut, error) {
 	if req.Login == "" || req.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "login and password are required")
 	}
 
-	staff, err := s.repo.StaffGetByLogin(ctx, req.Login)
+	staffModel, err := s.repo.StaffGetByLogin(ctx, req.Login)
 	if err != nil {
 		log.Printf("error: %v", err)
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
-	if staff == nil {
+	if staffModel == nil {
 		log.Printf("staff not found")
 		return nil, status.Error(codes.NotFound, "staff not found")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(staff.PasswordHash), []byte(req.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(staffModel.PasswordHash), []byte(req.Password)); err != nil {
 		log.Printf("invalid password")
 		return nil, status.Error(codes.Unauthenticated, "invalid password")
 	}
 
-	session, err := s.createSession(ctx, staff.ID)
+	session, err := s.createSession(ctx, staffModel.ID)
 	if err != nil {
 		log.Printf("failed to create session: %v", err)
 		return nil, err
 	}
 
-	return &staffv0.LoginResponse{
+	return &staff.LoginOut{
 		AccessToken:  session.Token,
 		RefreshToken: session.RefreshToken,
 		ExpiresAt:    session.ExpiresAt.Unix(),
-		Staff:        convertStaffToProto(staff),
+		Staff:        convertStaffToProto(staffModel),
 	}, nil
 }
 
 // RefreshToken обновление токена сессии
-func (s *StaffService) RefreshToken(ctx context.Context, req *staffv0.RefreshTokenRequest) (*staffv0.RefreshTokenResponse, error) {
+func (s *StaffService) RefreshToken(ctx context.Context, req *staff.RefreshTokenIn) (*staff.RefreshTokenOut, error) {
 	if req.RefreshToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "refresh token is required")
 	}
@@ -306,15 +306,15 @@ func (s *StaffService) RefreshToken(ctx context.Context, req *staffv0.RefreshTok
 		return nil, status.Error(codes.Unauthenticated, "refresh token expired")
 	}
 
-	staff, err := s.repo.StaffGetByID(ctx, session.StaffID)
+	staffModel, err := s.repo.StaffGetByID(ctx, session.StaffID)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
-	if staff == nil {
+	if staffModel == nil {
 		return nil, status.Error(codes.NotFound, "staff not found")
 	}
 
-	newSession, err := s.createSession(ctx, staff.ID)
+	newSession, err := s.createSession(ctx, staffModel.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -323,7 +323,7 @@ func (s *StaffService) RefreshToken(ctx context.Context, req *staffv0.RefreshTok
 		return nil, status.Error(codes.Internal, "failed to delete old session")
 	}
 
-	return &staffv0.RefreshTokenResponse{
+	return &staff.RefreshTokenOut{
 		AccessToken:  newSession.Token,
 		RefreshToken: newSession.RefreshToken,
 		ExpiresAt:    newSession.ExpiresAt.Unix(),
@@ -331,7 +331,7 @@ func (s *StaffService) RefreshToken(ctx context.Context, req *staffv0.RefreshTok
 }
 
 // Logout выход из системы и завершение сессии
-func (s *StaffService) Logout(ctx context.Context, req *staffv0.LogoutRequest) (*staffv0.LogoutResponse, error) {
+func (s *StaffService) Logout(ctx context.Context, req *staff.LogoutIn) (*staff.LogoutOut, error) {
 	if req.AccessToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "access token is required")
 	}
@@ -340,13 +340,13 @@ func (s *StaffService) Logout(ctx context.Context, req *staffv0.LogoutRequest) (
 		return nil, status.Error(codes.Internal, "failed to delete session")
 	}
 
-	return &staffv0.LogoutResponse{
+	return &staff.LogoutOut{
 		Success: true,
 	}, nil
 }
 
 // CheckAuth проверка текущего статуса авторизации
-func (s *StaffService) CheckAuth(ctx context.Context, req *staffv0.CheckAuthRequest) (*staffv0.CheckAuthResponse, error) {
+func (s *StaffService) CheckAuth(ctx context.Context, req *staff.CheckAuthIn) (*staff.CheckAuthOut, error) {
 	if req.AccessToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "access token is required")
 	}
@@ -356,7 +356,7 @@ func (s *StaffService) CheckAuth(ctx context.Context, req *staffv0.CheckAuthRequ
 		return nil, status.Error(codes.Internal, "failed to get session")
 	}
 	if session == nil {
-		return &staffv0.CheckAuthResponse{
+		return &staff.CheckAuthOut{
 			Authorized: false,
 		}, nil
 	}
@@ -365,29 +365,29 @@ func (s *StaffService) CheckAuth(ctx context.Context, req *staffv0.CheckAuthRequ
 		if err := s.repo.SessionDelete(ctx, session.Token); err != nil {
 			return nil, status.Error(codes.Internal, "failed to delete expired session")
 		}
-		return &staffv0.CheckAuthResponse{
+		return &staff.CheckAuthOut{
 			Authorized: false,
 		}, nil
 	}
 
-	staff, err := s.repo.StaffGetByID(ctx, session.StaffID)
+	staffModel, err := s.repo.StaffGetByID(ctx, session.StaffID)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
-	if staff == nil {
-		return &staffv0.CheckAuthResponse{
+	if staffModel == nil {
+		return &staff.CheckAuthOut{
 			Authorized: false,
 		}, nil
 	}
 
-	return &staffv0.CheckAuthResponse{
+	return &staff.CheckAuthOut{
 		Authorized: true,
-		Staff:      convertStaffToProto(staff),
+		Staff:      convertStaffToProto(staffModel),
 	}, nil
 }
 
 // ChangePassword изменение пароля авторизованного пользователя
-func (s *StaffService) ChangePassword(ctx context.Context, req *staffv0.ChangePasswordRequest) (*staffv0.ChangePasswordResponse, error) {
+func (s *StaffService) ChangePassword(ctx context.Context, req *staff.ChangePasswordIn) (*staff.ChangePasswordOut, error) {
 	if req.OldPassword == "" || req.NewPassword == "" || req.AccessToken == "" {
 		return nil, status.Error(codes.InvalidArgument, "old_password, new_password and access_token are required")
 	}
@@ -407,15 +407,15 @@ func (s *StaffService) ChangePassword(ctx context.Context, req *staffv0.ChangePa
 		return nil, status.Error(codes.Unauthenticated, "access token expired")
 	}
 
-	staff, err := s.repo.StaffGetByID(ctx, session.StaffID)
+	staffModel, err := s.repo.StaffGetByID(ctx, session.StaffID)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get staff")
 	}
-	if staff == nil {
+	if staffModel == nil {
 		return nil, status.Error(codes.NotFound, "staff not found")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(staff.PasswordHash), []byte(req.OldPassword)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(staffModel.PasswordHash), []byte(req.OldPassword)); err != nil {
 		return nil, status.Error(codes.Unauthenticated, "invalid old password")
 	}
 
@@ -424,18 +424,18 @@ func (s *StaffService) ChangePassword(ctx context.Context, req *staffv0.ChangePa
 		return nil, status.Error(codes.Internal, "failed to hash password")
 	}
 
-	staff.PasswordHash = string(hashedPassword)
-	staff.UpdatedAt = time.Now()
+	staffModel.PasswordHash = string(hashedPassword)
+	staffModel.UpdatedAt = time.Now()
 
-	if err := s.repo.StaffUpdate(ctx, staff); err != nil {
+	if err := s.repo.StaffUpdate(ctx, staffModel); err != nil {
 		return nil, status.Error(codes.Internal, "failed to update staff")
 	}
 
-	if err := s.repo.SessionDeleteAllForStaff(ctx, staff.ID); err != nil {
+	if err := s.repo.SessionDeleteAllForStaff(ctx, staffModel.ID); err != nil {
 		return nil, status.Error(codes.Internal, "failed to delete sessions")
 	}
 
-	return &staffv0.ChangePasswordResponse{
+	return &staff.ChangePasswordOut{
 		Success: true,
 	}, nil
 }
@@ -462,22 +462,18 @@ func (s *StaffService) createSession(ctx context.Context, staffID uuid.UUID) (*m
 }
 
 // convertStaffToProto преобразует модель Staff в proto-сообщение
-func convertStaffToProto(staff *model.Staff) *staffv0.Staff {
-	return &staffv0.Staff{
-		Id:       staff.ID.String(),
-		Login:    staff.Login,
-		RoleId:   int32(staff.RoleID),
-		RoleName: staff.RoleName,
-		Permissions: &staffv0.Permissions{
-			Access: staff.Permissions.Access,
+func convertStaffToProto(staffModel *model.Staff) *staff.Staff {
+	return &staff.Staff{
+		Id:       staffModel.ID.String(),
+		Login:    staffModel.Login,
+		RoleId:   int32(staffModel.RoleID),
+		RoleName: staffModel.RoleName,
+		Permissions: &staff.Permissions{
+			Access: staffModel.Permissions.Access,
 		},
-		CreatedAt: staff.CreatedAt.Unix(),
-		UpdatedAt: staff.UpdatedAt.Unix(),
+		CreatedAt: staffModel.CreatedAt.Unix(),
+		UpdatedAt: staffModel.UpdatedAt.Unix(),
 	}
-}
-
-func wrappedInt32(value int32) *int32 {
-	return &value
 }
 
 // generateToken генерирует случайный токен

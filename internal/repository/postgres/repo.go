@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+
 	"github.com/s21platform/staff-service/internal/config"
 	"github.com/s21platform/staff-service/internal/model"
 )

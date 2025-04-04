@@ -2,12 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.1
-// source: api/v0/staff.v0.proto
+// source: api/staff.proto
 
-package api
+package staff
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,16 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	StaffService_GetStaff_FullMethodName       = "/api.v0.StaffService/GetStaff"
-	StaffService_CreateStaff_FullMethodName    = "/api.v0.StaffService/CreateStaff"
-	StaffService_UpdateStaff_FullMethodName    = "/api.v0.StaffService/UpdateStaff"
-	StaffService_DeleteStaff_FullMethodName    = "/api.v0.StaffService/DeleteStaff"
-	StaffService_ListStaff_FullMethodName      = "/api.v0.StaffService/ListStaff"
-	StaffService_Login_FullMethodName          = "/api.v0.StaffService/Login"
-	StaffService_RefreshToken_FullMethodName   = "/api.v0.StaffService/RefreshToken"
-	StaffService_Logout_FullMethodName         = "/api.v0.StaffService/Logout"
-	StaffService_CheckAuth_FullMethodName      = "/api.v0.StaffService/CheckAuth"
-	StaffService_ChangePassword_FullMethodName = "/api.v0.StaffService/ChangePassword"
+	StaffService_Get_FullMethodName            = "/staff.StaffService/Get"
+	StaffService_Create_FullMethodName         = "/staff.StaffService/Create"
+	StaffService_Update_FullMethodName         = "/staff.StaffService/Update"
+	StaffService_Delete_FullMethodName         = "/staff.StaffService/Delete"
+	StaffService_List_FullMethodName           = "/staff.StaffService/List"
+	StaffService_Login_FullMethodName          = "/staff.StaffService/Login"
+	StaffService_RefreshToken_FullMethodName   = "/staff.StaffService/RefreshToken"
+	StaffService_Logout_FullMethodName         = "/staff.StaffService/Logout"
+	StaffService_CheckAuth_FullMethodName      = "/staff.StaffService/CheckAuth"
+	StaffService_ChangePassword_FullMethodName = "/staff.StaffService/ChangePassword"
 )
 
 // StaffServiceClient is the client API for StaffService service.
@@ -38,25 +39,25 @@ const (
 // Комбинированный сервис для управления персоналом и авторизацией
 type StaffServiceClient interface {
 	// Получение информации о сотруднике по ID
-	GetStaff(ctx context.Context, in *GetStaffRequest, opts ...grpc.CallOption) (*GetStaffResponse, error)
+	Get(ctx context.Context, in *GetIn, opts ...grpc.CallOption) (*GetOut, error)
 	// Создание нового сотрудника
-	CreateStaff(ctx context.Context, in *CreateStaffRequest, opts ...grpc.CallOption) (*CreateStaffResponse, error)
+	Create(ctx context.Context, in *CreateIn, opts ...grpc.CallOption) (*CreateOut, error)
 	// Обновление информации о сотруднике
-	UpdateStaff(ctx context.Context, in *UpdateStaffRequest, opts ...grpc.CallOption) (*UpdateStaffResponse, error)
+	Update(ctx context.Context, in *UpdateIn, opts ...grpc.CallOption) (*UpdateOut, error)
 	// Удаление сотрудника
-	DeleteStaff(ctx context.Context, in *DeleteStaffRequest, opts ...grpc.CallOption) (*DeleteStaffResponse, error)
+	Delete(ctx context.Context, in *DeleteIn, opts ...grpc.CallOption) (*DeleteOut, error)
 	// Получение списка сотрудников с фильтрацией и пагинацией
-	ListStaff(ctx context.Context, in *ListStaffRequest, opts ...grpc.CallOption) (*ListStaffResponse, error)
+	List(ctx context.Context, in *ListIn, opts ...grpc.CallOption) (*ListOut, error)
 	// Авторизация сотрудника по логину и паролю
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	Login(ctx context.Context, in *LoginIn, opts ...grpc.CallOption) (*LoginOut, error)
 	// Обновление токена сессии
-	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshTokenIn, opts ...grpc.CallOption) (*RefreshTokenOut, error)
 	// Выход из системы и завершение сессии
-	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	Logout(ctx context.Context, in *LogoutIn, opts ...grpc.CallOption) (*LogoutOut, error)
 	// Проверка текущего статуса авторизации
-	CheckAuth(ctx context.Context, in *CheckAuthRequest, opts ...grpc.CallOption) (*CheckAuthResponse, error)
+	CheckAuth(ctx context.Context, in *CheckAuthIn, opts ...grpc.CallOption) (*CheckAuthOut, error)
 	// Изменение пароля авторизованного пользователя
-	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
+	ChangePassword(ctx context.Context, in *ChangePasswordIn, opts ...grpc.CallOption) (*ChangePasswordOut, error)
 }
 
 type staffServiceClient struct {
@@ -67,59 +68,59 @@ func NewStaffServiceClient(cc grpc.ClientConnInterface) StaffServiceClient {
 	return &staffServiceClient{cc}
 }
 
-func (c *staffServiceClient) GetStaff(ctx context.Context, in *GetStaffRequest, opts ...grpc.CallOption) (*GetStaffResponse, error) {
+func (c *staffServiceClient) Get(ctx context.Context, in *GetIn, opts ...grpc.CallOption) (*GetOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetStaffResponse)
-	err := c.cc.Invoke(ctx, StaffService_GetStaff_FullMethodName, in, out, cOpts...)
+	out := new(GetOut)
+	err := c.cc.Invoke(ctx, StaffService_Get_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *staffServiceClient) CreateStaff(ctx context.Context, in *CreateStaffRequest, opts ...grpc.CallOption) (*CreateStaffResponse, error) {
+func (c *staffServiceClient) Create(ctx context.Context, in *CreateIn, opts ...grpc.CallOption) (*CreateOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateStaffResponse)
-	err := c.cc.Invoke(ctx, StaffService_CreateStaff_FullMethodName, in, out, cOpts...)
+	out := new(CreateOut)
+	err := c.cc.Invoke(ctx, StaffService_Create_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *staffServiceClient) UpdateStaff(ctx context.Context, in *UpdateStaffRequest, opts ...grpc.CallOption) (*UpdateStaffResponse, error) {
+func (c *staffServiceClient) Update(ctx context.Context, in *UpdateIn, opts ...grpc.CallOption) (*UpdateOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateStaffResponse)
-	err := c.cc.Invoke(ctx, StaffService_UpdateStaff_FullMethodName, in, out, cOpts...)
+	out := new(UpdateOut)
+	err := c.cc.Invoke(ctx, StaffService_Update_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *staffServiceClient) DeleteStaff(ctx context.Context, in *DeleteStaffRequest, opts ...grpc.CallOption) (*DeleteStaffResponse, error) {
+func (c *staffServiceClient) Delete(ctx context.Context, in *DeleteIn, opts ...grpc.CallOption) (*DeleteOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteStaffResponse)
-	err := c.cc.Invoke(ctx, StaffService_DeleteStaff_FullMethodName, in, out, cOpts...)
+	out := new(DeleteOut)
+	err := c.cc.Invoke(ctx, StaffService_Delete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *staffServiceClient) ListStaff(ctx context.Context, in *ListStaffRequest, opts ...grpc.CallOption) (*ListStaffResponse, error) {
+func (c *staffServiceClient) List(ctx context.Context, in *ListIn, opts ...grpc.CallOption) (*ListOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ListStaffResponse)
-	err := c.cc.Invoke(ctx, StaffService_ListStaff_FullMethodName, in, out, cOpts...)
+	out := new(ListOut)
+	err := c.cc.Invoke(ctx, StaffService_List_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *staffServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (c *staffServiceClient) Login(ctx context.Context, in *LoginIn, opts ...grpc.CallOption) (*LoginOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginResponse)
+	out := new(LoginOut)
 	err := c.cc.Invoke(ctx, StaffService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -127,9 +128,9 @@ func (c *staffServiceClient) Login(ctx context.Context, in *LoginRequest, opts .
 	return out, nil
 }
 
-func (c *staffServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error) {
+func (c *staffServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenIn, opts ...grpc.CallOption) (*RefreshTokenOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RefreshTokenResponse)
+	out := new(RefreshTokenOut)
 	err := c.cc.Invoke(ctx, StaffService_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -137,9 +138,9 @@ func (c *staffServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenR
 	return out, nil
 }
 
-func (c *staffServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+func (c *staffServiceClient) Logout(ctx context.Context, in *LogoutIn, opts ...grpc.CallOption) (*LogoutOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LogoutResponse)
+	out := new(LogoutOut)
 	err := c.cc.Invoke(ctx, StaffService_Logout_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -147,9 +148,9 @@ func (c *staffServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts
 	return out, nil
 }
 
-func (c *staffServiceClient) CheckAuth(ctx context.Context, in *CheckAuthRequest, opts ...grpc.CallOption) (*CheckAuthResponse, error) {
+func (c *staffServiceClient) CheckAuth(ctx context.Context, in *CheckAuthIn, opts ...grpc.CallOption) (*CheckAuthOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CheckAuthResponse)
+	out := new(CheckAuthOut)
 	err := c.cc.Invoke(ctx, StaffService_CheckAuth_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -157,9 +158,9 @@ func (c *staffServiceClient) CheckAuth(ctx context.Context, in *CheckAuthRequest
 	return out, nil
 }
 
-func (c *staffServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error) {
+func (c *staffServiceClient) ChangePassword(ctx context.Context, in *ChangePasswordIn, opts ...grpc.CallOption) (*ChangePasswordOut, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ChangePasswordResponse)
+	out := new(ChangePasswordOut)
 	err := c.cc.Invoke(ctx, StaffService_ChangePassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -174,25 +175,25 @@ func (c *staffServiceClient) ChangePassword(ctx context.Context, in *ChangePassw
 // Комбинированный сервис для управления персоналом и авторизацией
 type StaffServiceServer interface {
 	// Получение информации о сотруднике по ID
-	GetStaff(context.Context, *GetStaffRequest) (*GetStaffResponse, error)
+	Get(context.Context, *GetIn) (*GetOut, error)
 	// Создание нового сотрудника
-	CreateStaff(context.Context, *CreateStaffRequest) (*CreateStaffResponse, error)
+	Create(context.Context, *CreateIn) (*CreateOut, error)
 	// Обновление информации о сотруднике
-	UpdateStaff(context.Context, *UpdateStaffRequest) (*UpdateStaffResponse, error)
+	Update(context.Context, *UpdateIn) (*UpdateOut, error)
 	// Удаление сотрудника
-	DeleteStaff(context.Context, *DeleteStaffRequest) (*DeleteStaffResponse, error)
+	Delete(context.Context, *DeleteIn) (*DeleteOut, error)
 	// Получение списка сотрудников с фильтрацией и пагинацией
-	ListStaff(context.Context, *ListStaffRequest) (*ListStaffResponse, error)
+	List(context.Context, *ListIn) (*ListOut, error)
 	// Авторизация сотрудника по логину и паролю
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	Login(context.Context, *LoginIn) (*LoginOut, error)
 	// Обновление токена сессии
-	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
+	RefreshToken(context.Context, *RefreshTokenIn) (*RefreshTokenOut, error)
 	// Выход из системы и завершение сессии
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	Logout(context.Context, *LogoutIn) (*LogoutOut, error)
 	// Проверка текущего статуса авторизации
-	CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthResponse, error)
+	CheckAuth(context.Context, *CheckAuthIn) (*CheckAuthOut, error)
 	// Изменение пароля авторизованного пользователя
-	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
+	ChangePassword(context.Context, *ChangePasswordIn) (*ChangePasswordOut, error)
 	mustEmbedUnimplementedStaffServiceServer()
 }
 
@@ -203,34 +204,34 @@ type StaffServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedStaffServiceServer struct{}
 
-func (UnimplementedStaffServiceServer) GetStaff(context.Context, *GetStaffRequest) (*GetStaffResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetStaff not implemented")
+func (UnimplementedStaffServiceServer) Get(context.Context, *GetIn) (*GetOut, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedStaffServiceServer) CreateStaff(context.Context, *CreateStaffRequest) (*CreateStaffResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateStaff not implemented")
+func (UnimplementedStaffServiceServer) Create(context.Context, *CreateIn) (*CreateOut, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedStaffServiceServer) UpdateStaff(context.Context, *UpdateStaffRequest) (*UpdateStaffResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateStaff not implemented")
+func (UnimplementedStaffServiceServer) Update(context.Context, *UpdateIn) (*UpdateOut, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedStaffServiceServer) DeleteStaff(context.Context, *DeleteStaffRequest) (*DeleteStaffResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteStaff not implemented")
+func (UnimplementedStaffServiceServer) Delete(context.Context, *DeleteIn) (*DeleteOut, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
-func (UnimplementedStaffServiceServer) ListStaff(context.Context, *ListStaffRequest) (*ListStaffResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListStaff not implemented")
+func (UnimplementedStaffServiceServer) List(context.Context, *ListIn) (*ListOut, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedStaffServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+func (UnimplementedStaffServiceServer) Login(context.Context, *LoginIn) (*LoginOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedStaffServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
+func (UnimplementedStaffServiceServer) RefreshToken(context.Context, *RefreshTokenIn) (*RefreshTokenOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedStaffServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+func (UnimplementedStaffServiceServer) Logout(context.Context, *LogoutIn) (*LogoutOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
 }
-func (UnimplementedStaffServiceServer) CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthResponse, error) {
+func (UnimplementedStaffServiceServer) CheckAuth(context.Context, *CheckAuthIn) (*CheckAuthOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAuth not implemented")
 }
-func (UnimplementedStaffServiceServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
+func (UnimplementedStaffServiceServer) ChangePassword(context.Context, *ChangePasswordIn) (*ChangePasswordOut, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
 }
 func (UnimplementedStaffServiceServer) mustEmbedUnimplementedStaffServiceServer() {}
@@ -254,98 +255,98 @@ func RegisterStaffServiceServer(s grpc.ServiceRegistrar, srv StaffServiceServer)
 	s.RegisterService(&StaffService_ServiceDesc, srv)
 }
 
-func _StaffService_GetStaff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetStaffRequest)
+func _StaffService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StaffServiceServer).GetStaff(ctx, in)
+		return srv.(StaffServiceServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StaffService_GetStaff_FullMethodName,
+		FullMethod: StaffService_Get_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).GetStaff(ctx, req.(*GetStaffRequest))
+		return srv.(StaffServiceServer).Get(ctx, req.(*GetIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StaffService_CreateStaff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateStaffRequest)
+func _StaffService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StaffServiceServer).CreateStaff(ctx, in)
+		return srv.(StaffServiceServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StaffService_CreateStaff_FullMethodName,
+		FullMethod: StaffService_Create_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).CreateStaff(ctx, req.(*CreateStaffRequest))
+		return srv.(StaffServiceServer).Create(ctx, req.(*CreateIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StaffService_UpdateStaff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateStaffRequest)
+func _StaffService_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StaffServiceServer).UpdateStaff(ctx, in)
+		return srv.(StaffServiceServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StaffService_UpdateStaff_FullMethodName,
+		FullMethod: StaffService_Update_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).UpdateStaff(ctx, req.(*UpdateStaffRequest))
+		return srv.(StaffServiceServer).Update(ctx, req.(*UpdateIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StaffService_DeleteStaff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteStaffRequest)
+func _StaffService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StaffServiceServer).DeleteStaff(ctx, in)
+		return srv.(StaffServiceServer).Delete(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StaffService_DeleteStaff_FullMethodName,
+		FullMethod: StaffService_Delete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).DeleteStaff(ctx, req.(*DeleteStaffRequest))
+		return srv.(StaffServiceServer).Delete(ctx, req.(*DeleteIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StaffService_ListStaff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListStaffRequest)
+func _StaffService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StaffServiceServer).ListStaff(ctx, in)
+		return srv.(StaffServiceServer).List(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: StaffService_ListStaff_FullMethodName,
+		FullMethod: StaffService_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).ListStaff(ctx, req.(*ListStaffRequest))
+		return srv.(StaffServiceServer).List(ctx, req.(*ListIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _StaffService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
+	in := new(LoginIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -357,13 +358,13 @@ func _StaffService_Login_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: StaffService_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).Login(ctx, req.(*LoginRequest))
+		return srv.(StaffServiceServer).Login(ctx, req.(*LoginIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _StaffService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshTokenRequest)
+	in := new(RefreshTokenIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -375,13 +376,13 @@ func _StaffService_RefreshToken_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: StaffService_RefreshToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).RefreshToken(ctx, req.(*RefreshTokenRequest))
+		return srv.(StaffServiceServer).RefreshToken(ctx, req.(*RefreshTokenIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _StaffService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogoutRequest)
+	in := new(LogoutIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -393,13 +394,13 @@ func _StaffService_Logout_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: StaffService_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).Logout(ctx, req.(*LogoutRequest))
+		return srv.(StaffServiceServer).Logout(ctx, req.(*LogoutIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _StaffService_CheckAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CheckAuthRequest)
+	in := new(CheckAuthIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -411,13 +412,13 @@ func _StaffService_CheckAuth_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: StaffService_CheckAuth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).CheckAuth(ctx, req.(*CheckAuthRequest))
+		return srv.(StaffServiceServer).CheckAuth(ctx, req.(*CheckAuthIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _StaffService_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangePasswordRequest)
+	in := new(ChangePasswordIn)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -429,7 +430,7 @@ func _StaffService_ChangePassword_Handler(srv interface{}, ctx context.Context, 
 		FullMethod: StaffService_ChangePassword_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StaffServiceServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
+		return srv.(StaffServiceServer).ChangePassword(ctx, req.(*ChangePasswordIn))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -438,28 +439,28 @@ func _StaffService_ChangePassword_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var StaffService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v0.StaffService",
+	ServiceName: "staff.StaffService",
 	HandlerType: (*StaffServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetStaff",
-			Handler:    _StaffService_GetStaff_Handler,
+			MethodName: "Get",
+			Handler:    _StaffService_Get_Handler,
 		},
 		{
-			MethodName: "CreateStaff",
-			Handler:    _StaffService_CreateStaff_Handler,
+			MethodName: "Create",
+			Handler:    _StaffService_Create_Handler,
 		},
 		{
-			MethodName: "UpdateStaff",
-			Handler:    _StaffService_UpdateStaff_Handler,
+			MethodName: "Update",
+			Handler:    _StaffService_Update_Handler,
 		},
 		{
-			MethodName: "DeleteStaff",
-			Handler:    _StaffService_DeleteStaff_Handler,
+			MethodName: "Delete",
+			Handler:    _StaffService_Delete_Handler,
 		},
 		{
-			MethodName: "ListStaff",
-			Handler:    _StaffService_ListStaff_Handler,
+			MethodName: "List",
+			Handler:    _StaffService_List_Handler,
 		},
 		{
 			MethodName: "Login",
@@ -483,5 +484,5 @@ var StaffService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/v0/staff.v0.proto",
+	Metadata: "api/staff.proto",
 }

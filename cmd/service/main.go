@@ -4,12 +4,13 @@ import (
 	"log"
 	"net"
 
+	"google.golang.org/grpc"
+
 	"github.com/s21platform/staff-service/internal/config"
 	"github.com/s21platform/staff-service/internal/middleware"
 	"github.com/s21platform/staff-service/internal/repository/postgres"
-	v0 "github.com/s21platform/staff-service/internal/service/v0"
-	staffv0 "github.com/s21platform/staff-service/pkg/staff/v0"
-	"google.golang.org/grpc"
+	"github.com/s21platform/staff-service/internal/service"
+	staff "github.com/s21platform/staff-service/pkg/staff"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 
 	dbRepo := postgres.New(cfg)
 
-	service := v0.New(dbRepo)
+	srv := service.New(dbRepo)
 
 	lis, err := net.Listen("tcp", ":"+cfg.Service.Port)
 	if err != nil {
@@ -32,7 +33,7 @@ func main() {
 		grpc.UnaryInterceptor(authInterceptor.Unary()),
 	)
 
-	staffv0.RegisterStaffServiceServer(grpcServer, service)
+	staff.RegisterStaffServiceServer(grpcServer, srv)
 
 	log.Printf("Starting staff service on port %s", cfg.Service.Port)
 	if err := grpcServer.Serve(lis); err != nil {

@@ -1,0 +1,643 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "staff.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "StaffService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/staff": {
+      "get": {
+        "summary": "Получение списка сотрудников с фильтрацией и пагинацией",
+        "operationId": "StaffService_List",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffListOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "searchTerm",
+            "description": "поиск по логину",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "roleId",
+            "description": "фильтр по роли",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      },
+      "post": {
+        "summary": "Создание нового сотрудника",
+        "operationId": "StaffService_Create",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffCreateOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/staffCreateIn"
+            }
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    },
+    "/api/staff/check": {
+      "get": {
+        "summary": "Проверка текущего статуса авторизации",
+        "operationId": "StaffService_CheckAuth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffCheckAuthOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accessToken",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    },
+    "/api/staff/login": {
+      "post": {
+        "summary": "Авторизация сотрудника по логину и паролю",
+        "operationId": "StaffService_Login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffLoginOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/staffLoginIn"
+            }
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    },
+    "/api/staff/logout": {
+      "post": {
+        "summary": "Выход из системы и завершение сессии",
+        "operationId": "StaffService_Logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffLogoutOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/staffLogoutIn"
+            }
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    },
+    "/api/staff/password": {
+      "post": {
+        "summary": "Изменение пароля авторизованного пользователя",
+        "operationId": "StaffService_ChangePassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffChangePasswordOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/staffChangePasswordIn"
+            }
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    },
+    "/api/staff/refresh": {
+      "post": {
+        "summary": "Обновление токена сессии",
+        "operationId": "StaffService_RefreshToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffRefreshTokenOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/staffRefreshTokenIn"
+            }
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    },
+    "/api/staff/{id}": {
+      "get": {
+        "summary": "Получение информации о сотруднике по ID",
+        "operationId": "StaffService_Get",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffGetOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "ID сотрудника",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      },
+      "delete": {
+        "summary": "Удаление сотрудника",
+        "operationId": "StaffService_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffDeleteOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      },
+      "put": {
+        "summary": "Обновление информации о сотруднике",
+        "operationId": "StaffService_Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/staffUpdateOut"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StaffServiceUpdateBody"
+            }
+          }
+        ],
+        "tags": [
+          "StaffService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "StaffServiceUpdateBody": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "permissions": {
+          "$ref": "#/definitions/staffPermissions"
+        }
+      },
+      "title": "Запрос на обновление информации о сотруднике"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "staffChangePasswordIn": {
+      "type": "object",
+      "properties": {
+        "oldPassword": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        },
+        "accessToken": {
+          "type": "string",
+          "title": "access_token используется для идентификации пользователя"
+        }
+      },
+      "title": "Запрос на смену пароля"
+    },
+    "staffChangePasswordOut": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "Ответ на смену пароля"
+    },
+    "staffCheckAuthOut": {
+      "type": "object",
+      "properties": {
+        "authorized": {
+          "type": "boolean"
+        },
+        "staff": {
+          "$ref": "#/definitions/staffStaff"
+        }
+      },
+      "title": "Ответ на проверку авторизации"
+    },
+    "staffCreateIn": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "permissions": {
+          "$ref": "#/definitions/staffPermissions"
+        }
+      },
+      "title": "Запрос на создание сотрудника"
+    },
+    "staffCreateOut": {
+      "type": "object",
+      "properties": {
+        "staff": {
+          "$ref": "#/definitions/staffStaff"
+        }
+      },
+      "title": "Ответ с информацией о созданном сотруднике"
+    },
+    "staffDeleteOut": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "Ответ на удаление сотрудника"
+    },
+    "staffGetOut": {
+      "type": "object",
+      "properties": {
+        "staff": {
+          "$ref": "#/definitions/staffStaff"
+        }
+      },
+      "title": "Ответ с информацией о сотруднике"
+    },
+    "staffListOut": {
+      "type": "object",
+      "properties": {
+        "staff": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/staffStaff"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "Ответ со списком сотрудников"
+    },
+    "staffLoginIn": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "Запрос на авторизацию"
+    },
+    "staffLoginOut": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "int64",
+          "title": "время истечения токена в unix timestamp"
+        },
+        "staff": {
+          "$ref": "#/definitions/staffStaff"
+        }
+      },
+      "title": "Ответ на успешную авторизацию"
+    },
+    "staffLogoutIn": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        }
+      },
+      "title": "Запрос на выход из системы"
+    },
+    "staffLogoutOut": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "Ответ на выход из системы"
+    },
+    "staffPermissions": {
+      "type": "object",
+      "properties": {
+        "access": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "Структура разрешений сотрудника"
+    },
+    "staffRefreshTokenIn": {
+      "type": "object",
+      "properties": {
+        "refreshToken": {
+          "type": "string"
+        }
+      },
+      "title": "Запрос на обновление токена"
+    },
+    "staffRefreshTokenOut": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "int64",
+          "title": "время истечения токена в unix timestamp"
+        }
+      },
+      "title": "Ответ с обновленным токеном"
+    },
+    "staffStaff": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "roleId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "roleName": {
+          "type": "string"
+        },
+        "permissions": {
+          "$ref": "#/definitions/staffPermissions"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "int64"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Структура данных сотрудника"
+    },
+    "staffUpdateOut": {
+      "type": "object",
+      "properties": {
+        "staff": {
+          "$ref": "#/definitions/staffStaff"
+        }
+      },
+      "title": "Ответ с обновленной информацией о сотруднике"
+    }
+  }
+}

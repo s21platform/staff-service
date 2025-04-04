@@ -3,46 +3,46 @@
 
 ## Table of Contents
 
-- [api/v0/staff.v0.proto](#api_v0_staff-v0-proto)
-    - [ChangePasswordRequest](#api-v0-ChangePasswordRequest)
-    - [ChangePasswordResponse](#api-v0-ChangePasswordResponse)
-    - [CheckAuthRequest](#api-v0-CheckAuthRequest)
-    - [CheckAuthResponse](#api-v0-CheckAuthResponse)
-    - [CreateStaffRequest](#api-v0-CreateStaffRequest)
-    - [CreateStaffResponse](#api-v0-CreateStaffResponse)
-    - [DeleteStaffRequest](#api-v0-DeleteStaffRequest)
-    - [DeleteStaffResponse](#api-v0-DeleteStaffResponse)
-    - [GetStaffRequest](#api-v0-GetStaffRequest)
-    - [GetStaffResponse](#api-v0-GetStaffResponse)
-    - [ListStaffRequest](#api-v0-ListStaffRequest)
-    - [ListStaffResponse](#api-v0-ListStaffResponse)
-    - [LoginRequest](#api-v0-LoginRequest)
-    - [LoginResponse](#api-v0-LoginResponse)
-    - [LogoutRequest](#api-v0-LogoutRequest)
-    - [LogoutResponse](#api-v0-LogoutResponse)
-    - [Permissions](#api-v0-Permissions)
-    - [RefreshTokenRequest](#api-v0-RefreshTokenRequest)
-    - [RefreshTokenResponse](#api-v0-RefreshTokenResponse)
-    - [Staff](#api-v0-Staff)
-    - [UpdateStaffRequest](#api-v0-UpdateStaffRequest)
-    - [UpdateStaffResponse](#api-v0-UpdateStaffResponse)
+- [api/staff.proto](#api_staff-proto)
+    - [ChangePasswordIn](#staff-ChangePasswordIn)
+    - [ChangePasswordOut](#staff-ChangePasswordOut)
+    - [CheckAuthIn](#staff-CheckAuthIn)
+    - [CheckAuthOut](#staff-CheckAuthOut)
+    - [CreateIn](#staff-CreateIn)
+    - [CreateOut](#staff-CreateOut)
+    - [DeleteIn](#staff-DeleteIn)
+    - [DeleteOut](#staff-DeleteOut)
+    - [GetIn](#staff-GetIn)
+    - [GetOut](#staff-GetOut)
+    - [ListIn](#staff-ListIn)
+    - [ListOut](#staff-ListOut)
+    - [LoginIn](#staff-LoginIn)
+    - [LoginOut](#staff-LoginOut)
+    - [LogoutIn](#staff-LogoutIn)
+    - [LogoutOut](#staff-LogoutOut)
+    - [Permissions](#staff-Permissions)
+    - [RefreshTokenIn](#staff-RefreshTokenIn)
+    - [RefreshTokenOut](#staff-RefreshTokenOut)
+    - [Staff](#staff-Staff)
+    - [UpdateIn](#staff-UpdateIn)
+    - [UpdateOut](#staff-UpdateOut)
   
-    - [StaffService](#api-v0-StaffService)
+    - [StaffService](#staff-StaffService)
   
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="api_v0_staff-v0-proto"></a>
+<a name="api_staff-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## api/v0/staff.v0.proto
+## api/staff.proto
 
 
 
-<a name="api-v0-ChangePasswordRequest"></a>
+<a name="staff-ChangePasswordIn"></a>
 
-### ChangePasswordRequest
+### ChangePasswordIn
 Запрос на смену пароля
 
 
@@ -57,9 +57,9 @@
 
 
 
-<a name="api-v0-ChangePasswordResponse"></a>
+<a name="staff-ChangePasswordOut"></a>
 
-### ChangePasswordResponse
+### ChangePasswordOut
 Ответ на смену пароля
 
 
@@ -72,9 +72,9 @@
 
 
 
-<a name="api-v0-CheckAuthRequest"></a>
+<a name="staff-CheckAuthIn"></a>
 
-### CheckAuthRequest
+### CheckAuthIn
 Запрос на проверку авторизации
 
 
@@ -87,25 +87,25 @@
 
 
 
-<a name="api-v0-CheckAuthResponse"></a>
+<a name="staff-CheckAuthOut"></a>
 
-### CheckAuthResponse
+### CheckAuthOut
 Ответ на проверку авторизации
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | authorized | [bool](#bool) |  |  |
-| staff | [Staff](#api-v0-Staff) |  |  |
+| staff | [Staff](#staff-Staff) |  |  |
 
 
 
 
 
 
-<a name="api-v0-CreateStaffRequest"></a>
+<a name="staff-CreateIn"></a>
 
-### CreateStaffRequest
+### CreateIn
 Запрос на создание сотрудника
 
 
@@ -114,31 +114,31 @@
 | login | [string](#string) |  |  |
 | password | [string](#string) |  |  |
 | role_id | [int32](#int32) |  |  |
-| permissions | [Permissions](#api-v0-Permissions) |  |  |
+| permissions | [Permissions](#staff-Permissions) |  |  |
 
 
 
 
 
 
-<a name="api-v0-CreateStaffResponse"></a>
+<a name="staff-CreateOut"></a>
 
-### CreateStaffResponse
+### CreateOut
 Ответ с информацией о созданном сотруднике
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| staff | [Staff](#api-v0-Staff) |  |  |
+| staff | [Staff](#staff-Staff) |  |  |
 
 
 
 
 
 
-<a name="api-v0-DeleteStaffRequest"></a>
+<a name="staff-DeleteIn"></a>
 
-### DeleteStaffRequest
+### DeleteIn
 Запрос на удаление сотрудника
 
 
@@ -151,9 +151,9 @@
 
 
 
-<a name="api-v0-DeleteStaffResponse"></a>
+<a name="staff-DeleteOut"></a>
 
-### DeleteStaffResponse
+### DeleteOut
 Ответ на удаление сотрудника
 
 
@@ -166,9 +166,9 @@
 
 
 
-<a name="api-v0-GetStaffRequest"></a>
+<a name="staff-GetIn"></a>
 
-### GetStaffRequest
+### GetIn
 Запрос на получение информации о сотруднике
 
 
@@ -181,24 +181,24 @@
 
 
 
-<a name="api-v0-GetStaffResponse"></a>
+<a name="staff-GetOut"></a>
 
-### GetStaffResponse
+### GetOut
 Ответ с информацией о сотруднике
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| staff | [Staff](#api-v0-Staff) |  |  |
+| staff | [Staff](#staff-Staff) |  |  |
 
 
 
 
 
 
-<a name="api-v0-ListStaffRequest"></a>
+<a name="staff-ListIn"></a>
 
-### ListStaffRequest
+### ListIn
 Запрос на получение списка сотрудников
 
 
@@ -214,15 +214,15 @@
 
 
 
-<a name="api-v0-ListStaffResponse"></a>
+<a name="staff-ListOut"></a>
 
-### ListStaffResponse
+### ListOut
 Ответ со списком сотрудников
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| staff | [Staff](#api-v0-Staff) | repeated |  |
+| staff | [Staff](#staff-Staff) | repeated |  |
 | total_count | [int32](#int32) |  |  |
 | page_count | [int32](#int32) |  |  |
 
@@ -231,9 +231,9 @@
 
 
 
-<a name="api-v0-LoginRequest"></a>
+<a name="staff-LoginIn"></a>
 
-### LoginRequest
+### LoginIn
 Запрос на авторизацию
 
 
@@ -247,9 +247,9 @@
 
 
 
-<a name="api-v0-LoginResponse"></a>
+<a name="staff-LoginOut"></a>
 
-### LoginResponse
+### LoginOut
 Ответ на успешную авторизацию
 
 
@@ -258,16 +258,16 @@
 | access_token | [string](#string) |  |  |
 | refresh_token | [string](#string) |  |  |
 | expires_at | [int64](#int64) |  | время истечения токена в unix timestamp |
-| staff | [Staff](#api-v0-Staff) |  |  |
+| staff | [Staff](#staff-Staff) |  |  |
 
 
 
 
 
 
-<a name="api-v0-LogoutRequest"></a>
+<a name="staff-LogoutIn"></a>
 
-### LogoutRequest
+### LogoutIn
 Запрос на выход из системы
 
 
@@ -280,9 +280,9 @@
 
 
 
-<a name="api-v0-LogoutResponse"></a>
+<a name="staff-LogoutOut"></a>
 
-### LogoutResponse
+### LogoutOut
 Ответ на выход из системы
 
 
@@ -295,7 +295,7 @@
 
 
 
-<a name="api-v0-Permissions"></a>
+<a name="staff-Permissions"></a>
 
 ### Permissions
 Структура разрешений сотрудника
@@ -310,9 +310,9 @@
 
 
 
-<a name="api-v0-RefreshTokenRequest"></a>
+<a name="staff-RefreshTokenIn"></a>
 
-### RefreshTokenRequest
+### RefreshTokenIn
 Запрос на обновление токена
 
 
@@ -325,9 +325,9 @@
 
 
 
-<a name="api-v0-RefreshTokenResponse"></a>
+<a name="staff-RefreshTokenOut"></a>
 
-### RefreshTokenResponse
+### RefreshTokenOut
 Ответ с обновленным токеном
 
 
@@ -342,7 +342,7 @@
 
 
 
-<a name="api-v0-Staff"></a>
+<a name="staff-Staff"></a>
 
 ### Staff
 Структура данных сотрудника
@@ -354,7 +354,7 @@
 | login | [string](#string) |  |  |
 | role_id | [int32](#int32) |  |  |
 | role_name | [string](#string) |  |  |
-| permissions | [Permissions](#api-v0-Permissions) |  |  |
+| permissions | [Permissions](#staff-Permissions) |  |  |
 | created_at | [int64](#int64) |  |  |
 | updated_at | [int64](#int64) |  |  |
 
@@ -363,9 +363,9 @@
 
 
 
-<a name="api-v0-UpdateStaffRequest"></a>
+<a name="staff-UpdateIn"></a>
 
-### UpdateStaffRequest
+### UpdateIn
 Запрос на обновление информации о сотруднике
 
 
@@ -374,22 +374,22 @@
 | id | [string](#string) |  |  |
 | login | [string](#string) | optional |  |
 | role_id | [int32](#int32) | optional |  |
-| permissions | [Permissions](#api-v0-Permissions) | optional |  |
+| permissions | [Permissions](#staff-Permissions) | optional |  |
 
 
 
 
 
 
-<a name="api-v0-UpdateStaffResponse"></a>
+<a name="staff-UpdateOut"></a>
 
-### UpdateStaffResponse
+### UpdateOut
 Ответ с обновленной информацией о сотруднике
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| staff | [Staff](#api-v0-Staff) |  |  |
+| staff | [Staff](#staff-Staff) |  |  |
 
 
 
@@ -402,7 +402,7 @@
  
 
 
-<a name="api-v0-StaffService"></a>
+<a name="staff-StaffService"></a>
 
 ### StaffService
 Комбинированный сервис для управления персоналом и авторизацией
@@ -411,16 +411,16 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetStaff | [GetStaffRequest](#api-v0-GetStaffRequest) | [GetStaffResponse](#api-v0-GetStaffResponse) | Получение информации о сотруднике по ID |
-| CreateStaff | [CreateStaffRequest](#api-v0-CreateStaffRequest) | [CreateStaffResponse](#api-v0-CreateStaffResponse) | Создание нового сотрудника |
-| UpdateStaff | [UpdateStaffRequest](#api-v0-UpdateStaffRequest) | [UpdateStaffResponse](#api-v0-UpdateStaffResponse) | Обновление информации о сотруднике |
-| DeleteStaff | [DeleteStaffRequest](#api-v0-DeleteStaffRequest) | [DeleteStaffResponse](#api-v0-DeleteStaffResponse) | Удаление сотрудника |
-| ListStaff | [ListStaffRequest](#api-v0-ListStaffRequest) | [ListStaffResponse](#api-v0-ListStaffResponse) | Получение списка сотрудников с фильтрацией и пагинацией |
-| Login | [LoginRequest](#api-v0-LoginRequest) | [LoginResponse](#api-v0-LoginResponse) | Авторизация сотрудника по логину и паролю |
-| RefreshToken | [RefreshTokenRequest](#api-v0-RefreshTokenRequest) | [RefreshTokenResponse](#api-v0-RefreshTokenResponse) | Обновление токена сессии |
-| Logout | [LogoutRequest](#api-v0-LogoutRequest) | [LogoutResponse](#api-v0-LogoutResponse) | Выход из системы и завершение сессии |
-| CheckAuth | [CheckAuthRequest](#api-v0-CheckAuthRequest) | [CheckAuthResponse](#api-v0-CheckAuthResponse) | Проверка текущего статуса авторизации |
-| ChangePassword | [ChangePasswordRequest](#api-v0-ChangePasswordRequest) | [ChangePasswordResponse](#api-v0-ChangePasswordResponse) | Изменение пароля авторизованного пользователя |
+| Get | [GetIn](#staff-GetIn) | [GetOut](#staff-GetOut) | Получение информации о сотруднике по ID |
+| Create | [CreateIn](#staff-CreateIn) | [CreateOut](#staff-CreateOut) | Создание нового сотрудника |
+| Update | [UpdateIn](#staff-UpdateIn) | [UpdateOut](#staff-UpdateOut) | Обновление информации о сотруднике |
+| Delete | [DeleteIn](#staff-DeleteIn) | [DeleteOut](#staff-DeleteOut) | Удаление сотрудника |
+| List | [ListIn](#staff-ListIn) | [ListOut](#staff-ListOut) | Получение списка сотрудников с фильтрацией и пагинацией |
+| Login | [LoginIn](#staff-LoginIn) | [LoginOut](#staff-LoginOut) | Авторизация сотрудника по логину и паролю |
+| RefreshToken | [RefreshTokenIn](#staff-RefreshTokenIn) | [RefreshTokenOut](#staff-RefreshTokenOut) | Обновление токена сессии |
+| Logout | [LogoutIn](#staff-LogoutIn) | [LogoutOut](#staff-LogoutOut) | Выход из системы и завершение сессии |
+| CheckAuth | [CheckAuthIn](#staff-CheckAuthIn) | [CheckAuthOut](#staff-CheckAuthOut) | Проверка текущего статуса авторизации |
+| ChangePassword | [ChangePasswordIn](#staff-ChangePasswordIn) | [ChangePasswordOut](#staff-ChangePasswordOut) | Изменение пароля авторизованного пользователя |
 
  
 

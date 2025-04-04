@@ -1,10 +1,11 @@
-package v0
+package service
 
 import (
 	"context"
 	"time"
 
 	"github.com/google/uuid"
+
 	"github.com/s21platform/staff-service/internal/model"
 )
 
